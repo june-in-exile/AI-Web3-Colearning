@@ -1,31 +1,20 @@
 # Handbook Feedback
 
-> Confusion, typos, stale info, broken links, missing content, or structure suggestions I collected while reading the [AI × Web3 School Handbook](https://aiweb3.school/zh/handbook/). Each item flows from this folder back to the upstream repo.
+学习中发现错别字 / 概念不清 / 资料过期 / 死链 / 结构问题，记在这里，流回上游。
 
-## Upstream
+- 上游 repo：<https://github.com/lxdao-official/aiweb3school>
+- 每页"编辑此页"链接格式：`https://github.com/lxdao-official/aiweb3school/edit/main/docs/zh/handbook/<path>/README.md`
 
-- Handbook source repo: <https://github.com/lxdao-official/aiweb3school>
-- Per-page "编辑此页" link pattern: `https://github.com/lxdao-official/aiweb3school/edit/main/docs/zh/handbook/<path>/README.md`
+## 3 步流程
 
-## How to file feedback
+1. 从 [../templates/feedback.md](../templates/feedback.md) 拷一份，命名 `YYYY-MM-DD-<slug>.md` 放进本目录，填问题 + 建议 + 证据。
+2. 选路线：
+   - **错别字 / 小改动** → 点 Handbook 页面"编辑此页"，直接对 `lxdao-official/aiweb3school` 开 **PR**，PR 链接回填到本地草稿。
+   - **概念不清 / 结构建议 / 缺内容** → 去 <https://github.com/lxdao-official/aiweb3school/issues> 开 **Issue**，Issue 链接回填。
+3. commit 本地草稿（保留作索引）。
 
-1. **Draft locally** — copy [../templates/handbook-feedback.md](../templates/handbook-feedback.md) into this folder, name it `YYYY-MM-DD-<short-slug>.md`. Fill in `handbook_url`, problem, suggested fix, evidence.
-2. **Decide route**:
-   - **Typo / small wording / single-page tweak** → use the page's "编辑此页" link to open the GitHub editor and open a **Pull Request** directly. Paste the PR link back into the local file's `upstream_pr` field.
-   - **Conceptual confusion / structural suggestion / missing content** → open an **Issue** on <https://github.com/lxdao-official/aiweb3school/issues>. Paste the Issue link back into `upstream_issue`.
-3. **Update status** — `drafted → filed-issue | filed-pr → merged | rejected`.
-4. **Commit locally** — keep the local draft alongside the upstream submission for traceability.
+## 索引
 
-## Conventions
-
-- One feedback item per file. Easier to triage, easier to link.
-- Include the **Handbook URL** _and_ the **upstream edit URL** in frontmatter so a reviewer can jump straight to the source.
-- Keep the local draft even after the upstream Issue / PR closes — this folder is also a record of how my reading shaped the Handbook.
-
-## Index
-
-> Auto-curated by hand. Sort newest first.
-
-| Date | Slug | Page | Type | Status |
-|---|---|---|---|---|
-| _no items yet_ | | | | |
+| 日期 | Slug | 页面 | 类型 | 状态 |
+| --- | --- | --- | --- | --- |
+| _暂无_ | | | | |

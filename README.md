@@ -1,55 +1,38 @@
 # AI × Web3 Colearning
 
-> Personal learning journal and proof-of-work for **AI × Web3 School** Bootcamp.
+> [AI × Web3 School](https://aiweb3.school/zh/handbook/) Bootcamp 的个人学习仓库 — 笔记、proof-of-work、Handbook 反馈集中地。
 
-This repository is my open-source workspace for the [AI × Web3 School](https://aiweb3.school/zh/handbook/) Bootcamp. It hosts daily notes, hackathon explorations, cross-experiments, and feedback I send back to the Handbook upstream.
+## 外部入口
 
-## Quick Links
+- Handbook：<https://aiweb3.school/zh/handbook/>
+- Handbook 源码（提 Issue / PR 用）：<https://github.com/lxdao-official/aiweb3school>
+- WCB Bootcamp 页面：<https://web3career.build/zh/programs/AI-Web3-School>
+- WCB 每日打卡入口：<https://web3career.build/zh/programs/AI-Web3-School#tab=learning>
+- Learning Agent 启动 Prompt：<https://aiweb3.school/learning-agent.zh.txt>
 
-- **Handbook:** <https://aiweb3.school/zh/handbook/>
-- **Handbook upstream repo:** <https://github.com/lxdao-official/aiweb3school>
-- **WCB Bootcamp page:** <https://web3career.build/zh/programs/AI-Web3-School>
-- **WCB Learning tab:** <https://web3career.build/zh/programs/AI-Web3-School#tab=learning>
-- **Learning Agent prompt:** <https://aiweb3.school/learning-agent.zh.txt>
+## 怎么用这个 repo
 
-## Personal Context
+1. **看计划** — 翻 [learning-plan.md](./learning-plan.md)，里面有画像 + Week 1–4 + Hackathon 节奏。
+2. **每天打卡** — 在 [daily/](./daily/) 新建 `YYYY-MM-DD.md`（从 [templates/daily.md](./templates/daily.md) 拷一份）；写完去 WCB 手动提交。
+3. **做实验 / 任务** — proof-of-work 落到 [experiments/](./experiments/) 或 [tasks/](./tasks/)（任务用 [templates/task.md](./templates/task.md)）。
+4. **提 Handbook 反馈** — 看到错别字 / 概念不清 / 死链，按 [handbook-feedback/](./handbook-feedback/) 的 3 步流程走。
+5. **Hackathon** — 提案放 [hackathon/](./hackathon/)，最终提交材料归档到 [submissions/](./submissions/)。
 
-- See [profile.md](./profile.md) for my background, goals, and weekly cadence.
-- See [learning-plan.md](./learning-plan.md) for the personalized Week 1–4 + Hackathon plan.
-- Day-by-day records live under [daily/](./daily/).
+## 目录
 
-## Repository Layout
-
-| Path | Purpose |
+| 路径 | 用途 |
 | --- | --- |
-| [profile.md](./profile.md) | Learner profile snapshot (level / direction / cadence) |
-| [learning-plan.md](./learning-plan.md) | Personalized Week 1–4 + Hackathon plan |
-| [Week 1 Plan.md](./Week%201%20Plan.md) | Detailed Week 1 plan (concepts + checklist), authored before initialization |
-| [Learning Agent.md](./Learning%20Agent.md) | Meta notes on the Learning Agent design |
-| [daily/](./daily/) | One file per day: `YYYY-MM-DD.md` |
-| [tasks/](./tasks/) | Individual learning tasks (one file per task) |
-| [experiments/](./experiments/) | Hands-on experiments (API quickstarts, on-chain interactions, cross-experiments) |
-| [handbook-feedback/](./handbook-feedback/) | Feedback to upstream Handbook (typos / unclear concepts / stale info / structure) |
-| [hackathon/](./hackathon/) | Hackathon track selection, proposal drafts, demo prep |
-| [submissions/](./submissions/) | Snapshots / links of WCB / Handbook submissions |
-| [templates/](./templates/) | Templates for daily notes, tasks, feedback |
+| [learning-plan.md](./learning-plan.md) | 学员画像 + Week 1–4 + Hackathon 计划 |
+| [daily/](./daily/) | 每日笔记 `YYYY-MM-DD.md` |
+| [tasks/](./tasks/) | 单个任务记录 |
+| [experiments/](./experiments/) | 动手实验（API、链上、交叉实验） |
+| [handbook-feedback/](./handbook-feedback/) | Handbook 反馈草稿（流向上游 repo） |
+| [hackathon/](./hackathon/) | Track 选择、提案草稿 |
+| [submissions/](./submissions/) | WCB / Hackathon 提交快照 |
+| [templates/](./templates/) | daily / task / feedback 三个模板 |
 
-## Privacy & Safety Boundary
+## 安全边界（仓库 public，必读）
 
-This repo is **public**. Do **not** commit:
+**不要** commit：私钥、助记词、API key、secret token（含 `WCB_AGENT_SECRET_API_KEY`）、未公开联系方式、内部会议链接、他人数据。
 
-- Private keys, mnemonics, seed phrases
-- API keys, secret tokens (including `WCB_AGENT_SECRET_API_KEY`)
-- Personal contact info that is not already public
-- Internal meeting links / private invite URLs
-- Other people's personal data
-
-Treat every commit as if a Hackathon reviewer or future employer will read it.
-
-## Workflow Principles (from the Learning Agent prompt)
-
-1. **Human-in-the-loop:** Any account / repo / file-write / WCB submission / secret config requires my confirmation before execution.
-2. **Lightweight first:** Today's actionable step beats a perfect 4-week plan.
-3. **Proof-of-work over notes:** Each chunk of learning should leave a commit, screenshot, transaction hash, or PR.
-4. **Handbook feedback loop:** Confusion or errors I find during learning flow back to [handbook-feedback/](./handbook-feedback/) and then upstream.
-5. **Platform boundary:** The Agent assists with drafting; the WCB / check-in platform remains the source of truth for submissions.
+涉及账号、写文件、链上交易、WCB 提交，**都要人工确认**后再执行。
