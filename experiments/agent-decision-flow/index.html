@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agent 决策流程图 — AI × Web3 School</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0b0f19;
+    --surface: #131827;
+    --surface-2: #1a2332;
+    --border: #1e2d45;
+    --text: #e2e8f0;
+    --text-muted: #64748b;
+    --cyan: #22d3ee;
+    --emerald: #34d399;
+    --amber: #fbbf24;
+    --rose: #fb7185;
+    --violet: #a78bfa;
+    --slate: #475569;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', -apple-system, sans-serif;
+    min-height: 100vh;
+    padding: 2rem 1rem;
+  }
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  /* Header */
+  header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+  header h1 {
+    font-size: 1.75rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, #22d3ee, #34d399);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  header p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+  }
+  .badge {
+    display: inline-block;
+    background: rgba(34, 211, 238, 0.1);
+    border: 1px solid rgba(34, 211, 238, 0.3);
+    color: var(--cyan);
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    margin-top: 0.75rem;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* Flowchart SVG */
+  .flowchart-wrapper {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    overflow-x: auto;
+    margin-bottom: 2rem;
+  }
+  .flowchart-wrapper svg {
+    display: block;
+    margin: 0 auto;
+  }
+
+  /* Info panel */
+  .info-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    min-height: 120px;
+    transition: all 0.2s ease;
+  }
+  .info-panel.empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+  }
+  .info-panel:not(.empty) .info-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .info-panel:not(.empty) .info-desc {
+    color: #94a3b8;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    margin-bottom: 0.75rem;
+  }
+  .info-panel:not(.empty) .info-ref {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .info-tag {
+    display: inline-block;
+    font-size: 0.65rem;
+    font-weight: 600;
+    padding: 0.15rem 0.45rem;
+    border-radius: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .tag-auto { background: rgba(52, 211, 153, 0.15); color: var(--emerald); border: 1px solid rgba(52, 211, 153, 0.3); }
+  .tag-confirm { background: rgba(251, 191, 36, 0.15); color: var(--amber); border: 1px solid rgba(251, 191, 36, 0.3); }
+  .tag-stop { background: rgba(251, 113, 133, 0.15); color: var(--rose); border: 1px solid rgba(251, 113, 133, 0.3); }
+  .tag-process { background: rgba(34, 211, 238, 0.1); color: var(--cyan); border: 1px solid rgba(34, 211, 238, 0.2); }
+
+  /* Legend & Footer */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    margin-bottom: 2rem;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 1.5px solid;
+  }
+  .legend-dot.auto { background: rgba(52, 211, 153, 0.3); border-color: var(--emerald); }
+  .legend-dot.confirm { background: rgba(251, 191, 36, 0.3); border-color: var(--amber); }
+  .legend-dot.stop { background: rgba(251, 113, 133, 0.3); border-color: var(--rose); }
+  .legend-dot.process { background: rgba(34, 211, 238, 0.2); border-color: var(--cyan); }
+  .legend-dot.user { background: rgba(167, 139, 250, 0.3); border-color: var(--violet); }
+
+  footer {
+    text-align: center;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    opacity: 0.6;
+  }
+  footer a { color: var(--cyan); }
+
+  /* Key points cards */
+  .key-points {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .key-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem;
+  }
+  .key-card h3 {
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+  }
+  .key-card p {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  @media (max-width: 768px) {
+    header h1 { font-size: 1.25rem; }
+    .flowchart-wrapper { padding: 0.75rem; }
+    body { padding: 1rem 0.5rem; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <h1>🤖 Agent 决策流程图</h1>
+    <p>AI × Web3 School — Handbook 智能体（Agent）章节 · 交互式可视化</p>
+    <span class="badge">点击节点查看详情</span>
+  </header>
+
+  <!-- Flowchart -->
+  <div class="flowchart-wrapper">
+    <svg viewBox="0 0 1050 920" width="1050" height="920" xmlns="http://www.w3.org/2000/svg">
+      <!-- Definitions -->
+      <defs>
+        <marker id="arrow-cyan" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-auto">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#22d3ee" opacity="0.6"/>
+        </marker>
+        <marker id="arrow-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-auto">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#fbbf24" opacity="0.6"/>
+        </marker>
+        <marker id="arrow-rose" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-auto">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#fb7185" opacity="0.6"/>
+        </marker>
+        <marker id="arrow-emerald" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-auto">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#34d399" opacity="0.6"/>
+        </marker>
+        <marker id="arrow-muted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-auto">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569" opacity="0.6"/>
+        </marker>
+        <filter id="glow">
+          <feGaussianBlur stdDeviation="3" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <filter id="shadow">
+          <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000" flood-opacity="0.4"/>
+        </filter>
+      </defs>
+
+      <!-- Background grid -->
+      <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+        <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1a2332" stroke-width="0.5"/>
+      </pattern>
+      <rect width="1050" height="920" fill="url(#grid)"/>
+
+      <!-- Connectors (drawn first so they're behind boxes) -->
+      <!-- S1 → S2 -->
+      <line x1="525" y1="100" x2="525" y2="150" stroke="#22d3ee" stroke-width="2" marker-end="url(#arrow-cyan)" opacity="0.5"/>
+      <!-- S2 → S3 -->
+      <line x1="525" y1="195" x2="525" y2="235" stroke="#22d3ee" stroke-width="2" marker-end="url(#arrow-cyan)" opacity="0.5"/>
+      <!-- S3 → read-only branch (left) and write branch (right) -->
+      <line x1="525" y1="280" x2="300" y2="330" stroke="#34d399" stroke-width="2" marker-end="url(#arrow-emerald)" opacity="0.5"/>
+      <line x1="525" y1="280" x2="750" y2="330" stroke="#fbbf24" stroke-width="2" marker-end="url(#arrow-amber)" opacity="0.5"/>
+      <!-- Read S4 → S5 -->
+      <line x1="300" y1="375" x2="300" y2="415" stroke="#34d399" stroke-width="2" marker-end="url(#arrow-emerald)" opacity="0.5"/>
+      <!-- S5 → merge point -->
+      <line x1="300" y1="460" x2="525" y2="510" stroke="#475569" stroke-width="2" marker-end="url(#arrow-muted)" opacity="0.5" stroke-dasharray="4,3"/>
+      <!-- Write S4 → S5 -->
+      <line x1="750" y1="375" x2="750" y2="415" stroke="#fbbf24" stroke-width="2" marker-end="url(#arrow-amber)" opacity="0.5"/>
+      <!-- S5 right → merge point -->
+      <line x1="750" y1="460" x2="525" y2="510" stroke="#475569" stroke-width="2" marker-end="url(#arrow-muted)" opacity="0.5" stroke-dasharray="4,3"/>
+      <!-- Merge → S6 -->
+      <line x1="525" y1="555" x2="525" y2="595" stroke="#22d3ee" stroke-width="2" marker-end="url(#arrow-cyan)" opacity="0.5"/>
+      <!-- S6 → S7 -->
+      <line x1="525" y1="640" x2="525" y2="680" stroke="#fbbf24" stroke-width="2" marker-end="url(#arrow-amber)" opacity="0.5"/>
+      <!-- S7 → S8 -->
+      <line x1="525" y1="725" x2="525" y2="765" stroke="#34d399" stroke-width="2" marker-end="url(#arrow-emerald)" opacity="0.5"/>
+      <!-- S8 → S9 -->
+      <line x1="525" y1="810" x2="525" y2="850" stroke="#34d399" stroke-width="2" marker-end="url(#arrow-emerald)" opacity="0.5"/>
+
+      <!-- Back-arrow: S9 → S2 (loop) -->
+      <path d="M 640 870 L 900 870 L 900 170 L 640 170" fill="none" stroke="#475569" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrow-muted)" opacity="0.4"/>
+      <text x="905" y="520" fill="#475569" font-size="10" font-family="JetBrains Mono, monospace" transform="rotate(90, 905, 520)" opacity="0.5">循环（持续任务）→</text>
+
+      <!-- Horizontal label: Branch split -->
+      <text x="525" y="310" fill="#475569" font-size="10" font-family="JetBrains Mono, monospace" text-anchor="middle" opacity="0.6">系统拆分步骤</text>
+
+      <!-- ============ NODES ============ -->
+
+      <!-- S1: User Goal -->
+      <g class="node" data-node="s1" cursor="pointer" filter="url(#shadow)">
+        <rect x="400" y="50" width="250" height="50" rx="25" fill="#131827" stroke="#a78bfa" stroke-width="1.5"/>
+        <rect x="400" y="50" width="250" height="50" rx="25" fill="rgba(167, 139, 250, 0.12)" stroke="none"/>
+        <text x="525" y="80" fill="#a78bfa" font-size="13" font-family="Inter, sans-serif" font-weight="600" text-anchor="middle">🎯 用户目标 & 约束</text>
+      </g>
+
+      <!-- S2: Read Context + Plan -->
+      <g class="node" data-node="s2" cursor="pointer" filter="url(#shadow)">
+        <rect x="400" y="150" width="250" height="45" rx="8" fill="#131827" stroke="#22d3ee" stroke-width="1.2"/>
+        <rect x="400" y="150" width="250" height="45" rx="8" fill="rgba(34, 211, 238, 0.08)" stroke="none"/>
+        <text x="525" y="174" fill="#22d3ee" font-size="12" font-family="Inter, sans-serif" font-weight="600" text-anchor="middle">🧠 读取上下文 → 生成计划</text>
+        <text x="525" y="188" fill="#64748b" font-size="8" font-family="JetBrains Mono, monospace" text-anchor="middle">系统拆分步骤为可执行序列</text>
+      </g>
+
+      <!-- S3: Split Read vs Write -->
+      <g class="node" data-node="s3" cursor="pointer" filter="url(#shadow)">
+        <rect x="425" y="237" width="200" height="43" rx="8" fill="#131827" stroke="#22d3ee" stroke-width="1.2"/>
+        <rect x="425" y="237" width="200" height="43" rx="8" fill="rgba(34, 211, 238, 0.08)" stroke="none"/>
+        <text x="525" y="258" fill="#22d3ee" font-size="11" font-family="Inter, sans-serif" font-weight="600" text-anchor="middle">🔀 步骤分类</text>
+        <text x="525" y="272" fill="#64748b" font-size="8" font-family="JetBrains Mono, monospace" text-anchor="middle">只读 vs 写入/高风险</text>
+      </g>
+
+      <!-- Left branch label -->
+      <text x="300" y="320" fill="#34d399" font-size="10" font-family="Inter, sans-serif" font-weight="600" text-anchor="middle">🟢 只读步骤</text>
+      <text x="300" y="333" fill="#64748b" font-size="8" font-family="JetBrains Mono, monospace" text-anchor="middle">自动执行</text>
+      <!-- Right branch label -->
+      <text x="750" y="320" fill="#fbbf24" font-size="10" font-family="Inter, sans-serif" font-weight="600" text-anchor="middle">🟡 写入/高风险步骤</text>
+      <text x="750" y="333" fill="#64748b" font-size="8" font-family="JetBrains Mono, monospace" text-anchor="middle">进入 Policy 检查</text>
+
+      <!-- S4 (left): Auto-Execute Read Tools -->
+      <g class="node" data-node="s4l" cursor="pointer" filter="url(#shadow)">
+        <rect x="230" y="335" width="140" height="40" rx="8" fill="#131827" stroke="#34d399" stroke-width="1.2"/>
+        <rect x="230" y="335" width="140" height="40" rx="8" fill="rgba(52, 211, 153, 0.1)" stroke="none"/>
+        <text x="300" y="354" fill="#34d399" font-size="10" font-family="Inter, sans-serif" font-weight="600" text-anchor="middle">🔍 只读工具自动执行</text>
+        <text x="300" y="368" fill="#64748b" font-size="8" font-family="JetBrains Mono, monospace" text-anchor="middle">搜索 / 查询 / 获取</text>
+      </g>
+
+      <!-- S4 (right): Policy Check -->
+      <g class="node" data-node="s4r" cursor="pointer" filter="url(#shadow)">
+        <rect x="680" y="335" width="140" height="40" rx="8" fill="#131827" stroke="#fbbf24" stroke-width="1.2"/>
+        <rect x="680" y="335" width="140" height="40" rx="8" fill="rgba(251, 191, 36, 0.1)" stroke="none"/>
+        <text x="750" y="354" fill="#fbbf24" font-size="10" font-family="Inter, sans-serif" font-weight="600" text-anchor="middle">🛡️ Policy 检查</text>
+        <text x="750" y="368" fill="#64748b" font-size="8" font-family="JetBrains Mono, monospace" text-anchor="middle">权限 / 额度 / 风险规则</text>
+      </g>
+
+      <!-- S5 (left): Reflection -->
+      <g class="node" data-node="s5l" cursor="pointer" filter="url(#shadow)">
+        <rect x="230" y="417" width="140" height="43" rx="8" fill="#131827" stroke="#34d399" stroke-width="1.2"/>
+        <rect x="230" y="417" width="140" height="43" rx="8" fill="rgba(52, 211, 153, 0.1)" stroke="none"/>
+        <text x="300" y="436" fill="#34d399" font-size="10" font-family="Inter, sans-serif" font-weight="600" text-anchor="middle">🔄 Reflection 检查</text>
+        <text x="300" y="452" fill="#64748b" font-size="8" font-family="JetBrains Mono, monospace" text-anchor="middle">验证 / 补漏 / 修正</text>
+      </g>
+
+      <!-- S5 (right): Simulation -->
+      <g class="node" data-node="s5r" cursor="pointer" filter="url(#shadow)">
+        <rect x="680" y="417" width="140" height="43" rx="8" fill="#131827" stroke="#fbbf24" stroke-width="1.2"/>
+        <rect x="680" y="417" width="140" height="43" rx="8" fill="rgba(251, 191, 36, 0.1)" stroke="none"/>
+        <text x="750" y="436" fill="#fbbf24" font-size="10" font-family="Inter, sans-serif" font-weight="600" text-anchor="middle">📊 Simulation</text>
+        <text x="750" y="452" fill="#64748b" font-size="8" font-family="JetBrains Mono, monospace" text-anchor="middle">模拟链上影响</text>
+      </g>
+
+      <!-- S6: User Confirmation -->
+      <g class="node" data-node="s6" cursor="pointer" filter="url(#shadow)">
+        <rect x="380" y="510" width="290" height="45" rx="22" fill="#131827" stroke="#fbbf24" stroke-width="1.5"/>
+        <rect x="380" y="510" width="290" height="45" rx="22" fill="rgba(251, 191, 36, 0.1)" stroke="none"/>
+        <text x="525" y="533" fill="#fbbf24" font-size="12" font-family="Inter, sans-serif" font-weight="600" text-anchor="middle">👤 人工确认</text>
+        <text x="525" y="548" fill="#64748b" font-size="9" font-family="JetBrains Mono, monospace" text-anchor="middle">用户批准 / 拒绝高风险动作</text>
+      </g>
+
+      <!-- S7: Execute via Wallet -->
+      <g class="node" data-node="s7" cursor="pointer" filter="url(#shadow)">
+        <rect x="400" y="595" width="250" height="45" rx="8" fill="#131827" stroke="#34d399" stroke-width="1.2"/>
+        <rect x="400" y="595" width="250" height="45" rx="8" fill="rgba(52, 211, 153, 0.08)" stroke="none"/>
+        <text x="525" y="617" fill="#34d399" font-size="12" font-family="Inter, sans-serif" font-weight="600" text-anchor="middle">💳 钱包 / Smart Account 执行</text>
+        <text x="525" y="633" fill="#64748b" font-size="8" font-family="JetBrains Mono, monospace" text-anchor="middle">签名 → 链上提交</text>
+      </g>
+
+      <!-- S8: Log & Record -->
+      <g class="node" data-node="s8" cursor="pointer" filter="url(#shadow)">
+        <rect x="400" y="680" width="250" height="45" rx="8" fill="#131827" stroke="#34d399" stroke-width="1.2"/>
+        <rect x="400" y="680" width="250" height="45" rx="8" fill="rgba(52, 211, 153, 0.08)" stroke="none"/>
+        <text x="525" y="702" fill="#34d399" font-size="12" font-family="Inter, sans-serif" font-weight="600" text-anchor="middle">📝 日志记录每一步</text>
+        <text x="525" y="718" fill="#64748b" font-size="8" font-family="JetBrains Mono, monospace" text-anchor="middle">工具调用 / 确认 / 状态 / 结果</text>
+      </g>
+
+      <!-- S9: Stop Conditions -->
+      <g class="node" data-node="s9" cursor="pointer" filter="url(#shadow)">
+        <rect x="400" y="765" width="250" height="45" rx="22" fill="#131827" stroke="#fb7185" stroke-width="1.5"/>
+        <rect x="400" y="765" width="250" height="45" rx="22" fill="rgba(251, 113, 133, 0.1)" stroke="none"/>
+        <text x="525" y="788" fill="#fb7185" font-size="12" font-family="Inter, sans-serif" font-weight="600" text-anchor="middle">⏹️ 停止条件</text>
+        <text x="525" y="803" fill="#64748b" font-size="9" font-family="JetBrains Mono, monospace" text-anchor="middle">目标达成 / 错误 / 预算超限 / 用户中断</text>
+      </g>
+
+    </svg>
+  </div>
+
+  <!-- Legend -->
+  <div class="legend">
+    <div class="legend-item"><span class="legend-dot user"></span> 用户输入</div>
+    <div class="legend-item"><span class="legend-dot process"></span> Agent 处理</div>
+    <div class="legend-item"><span class="legend-dot auto"></span> 自动执行</div>
+    <div class="legend-item"><span class="legend-dot confirm"></span> 需人工确认</div>
+    <div class="legend-item"><span class="legend-dot stop"></span> 停止条件</div>
+  </div>
+
+  <!-- Info panel -->
+  <div class="info-panel empty" id="infoPanel">
+    <span>👆 点击流程图中的节点查看 Handbook 解读</span>
+  </div>
+
+  <!-- Key Points Cards -->
+  <div class="key-points">
+    <div class="key-card" style="border-left: 2px solid var(--cyan);">
+      <h3 style="color: var(--cyan);">🧠 核心原则</h3>
+      <p>Agent 不是自主权本身，而是<strong>被约束的执行循环</strong>。目标、工具、状态、权限和停止条件缺一不可。</p>
+    </div>
+    <div class="key-card" style="border-left: 2px solid var(--emerald);">
+      <h3 style="color: var(--emerald);">⚖️ 分工原则</h3>
+      <p>模型负责提出候选行动，系统负责限制行动空间，用户负责批准高风险边界。</p>
+    </div>
+    <div class="key-card" style="border-left: 2px solid var(--rose);">
+      <h3 style="color: var(--rose);">⚠️ 风险边界</h3>
+      <p>工具比回答更危险。读数据和写数据库不是同一风险等级。写入/授权/支付不能仅靠 Agent 自我检查。</p>
+    </div>
+    <div class="key-card" style="border-left: 2px solid var(--amber);">
+      <h3 style="color: var(--amber);">📋 状态即审计</h3>
+      <p>状态必须外置和可查。任务进度、工具结果、失败原因、用户确认都要记录，不应只藏在模型上下文里。</p>
+    </div>
+  </div>
+
+  <footer>
+    <p>来源：<a href="https://aiweb3.school/zh/handbook/ai-basics/agent/" target="_blank">AI × Web3 Handbook — 智能体（Agent）</a></p>
+    <p style="margin-top: 2px;">AI × Web3 Colearning · <a href="https://github.com/june-in-exile/AI-Web3-Colearning" target="_blank">GitHub</a></p>
+  </footer>
+</div>
+
+<script>
+// Node data from Handbook
+const nodeData = {
+  s1: {
+    tag: 'user',
+    tagLabel: '用户输入',
+    title: '🎯 用户目标 & 约束',
+    desc: '用户提出目标和约束。Agent 围绕目标持续调用工具、读取状态、调整步骤。<br><br><strong>关键：</strong>Agent 的关键不在"像人"，而在它能不能在明确权限和可审计流程里，把建议推进到行动。',
+    ref: 'Handbook — 智能体（Agent）· 第一性原理'
+  },
+  s2: {
+    tag: 'process',
+    tagLabel: 'Agent 处理',
+    title: '🧠 读取上下文 → 生成计划',
+    desc: 'Agent 读取链上状态和上下文，生成多步行动计划。<br><br>一个好的 Agent plan 应该能暴露：<br>• 每一步需要什么工具<br>• 每一步读还是写<br>• 哪些步骤需要自动执行<br>• 哪些步骤需要用户确认<br>• 失败时是否可以重试<br>• 最终如何验证任务完成',
+    ref: 'Handbook — 智能体（Agent）· Planning'
+  },
+  s3: {
+    tag: 'process',
+    tagLabel: 'Agent 处理',
+    title: '🔀 步骤分类',
+    desc: '系统把计划拆成只读步骤和候选写入步骤。<br><br><strong>只读工具自动执行</strong>，写入工具进入 policy 检查。<br><br>越靠近高风险动作，计划越需要被系统规则拆开检查。',
+    ref: 'Handbook — 智能体（Agent）· 在 AI x Web3 中的位置'
+  },
+  s4l: {
+    tag: 'auto',
+    tagLabel: '自动执行',
+    title: '🔍 只读工具自动执行',
+    desc: '搜索、数据库查询、API 读取、代码执行等只读操作自动执行。<br><br><strong>安全边界：</strong>只读工具也有风险——一个能读网页的 Agent 可能被恶意网页 Prompt Injection 影响。但只读错误的后果远小于写入错误。',
+    ref: 'Handbook — 智能体（Agent）· Tool Use'
+  },
+  s4r: {
+    tag: 'confirm',
+    tagLabel: '需人工确认',
+    title: '🛡️ Policy 检查',
+    desc: '写入工具进入权限检查层：<br>• 输入 schema 验证<br>• 权限范围检查<br>• 是否会产生外部副作用<br>• 调用前后如何记录<br>• 哪些调用需要人工确认<br><br><strong>最危险的设计：</strong>让 Agent 同时拥有模糊目标、广泛工具、长期记忆和大额资产权限。',
+    ref: 'Handbook — 智能体（Agent）· Tool Use + 最小实践'
+  },
+  s5l: {
+    tag: 'auto',
+    tagLabel: '自动执行',
+    title: '🔄 Reflection 检查',
+    desc: 'Agent 检查自己的中间结果，发现信息不足、工具失败、计划不合理，然后修正下一步。<br><br><strong>注意：</strong>Self-reflection 不能替代外部验证。Agent 自我反思仍然由模型完成，模型可能给自己的错误找理由。尤其是写入、授权、支付这类动作，reflection 只能作为辅助诊断。',
+    ref: 'Handbook — 智能体（Agent）· Reflection'
+  },
+  s5r: {
+    tag: 'confirm',
+    tagLabel: '需人工确认',
+    title: '📊 Simulation',
+    desc: '模拟展示链上影响——交易会做什么、消耗多少 Gas、影响哪些状态。<br><br>只有当用户明确授权，并经过交易 simulation 后，系统才允许生成交易草稿。',
+    ref: 'Handbook — 智能体（Agent）· 最小实践'
+  },
+  s6: {
+    tag: 'confirm',
+    tagLabel: '需人工确认',
+    title: '👤 人工确认',
+    desc: '用户审查高风险动作，批准或拒绝。<br><br><strong>这是最关键的防线：</strong><br>• 任何写入型操作都应默认 stop and confirm<br>• 人工确认应有足够信息做决策（simulation 结果、风险提醒）<br>• 确认记录必须写入审计日志',
+    ref: 'Handbook — 安全护栏原则'
+  },
+  s7: {
+    tag: 'auto',
+    tagLabel: '自动执行',
+    title: '💳 钱包 / Smart Account 执行',
+    desc: '用户确认后，Smart Account / 钱包进行链上签名并提交交易。<br><br>Agent 可以生成交易草稿、模拟执行，但真正的签名权始终由用户或智能账户控制，Agent 不直接接触私钥。',
+    ref: 'Handbook — 智能体（Agent）· 在 AI x Web3 中的位置'
+  },
+  s8: {
+    tag: 'auto',
+    tagLabel: '自动执行',
+    title: '📝 日志记录每一步',
+    desc: '日志记录每一步和最终状态：<br>• 工具调用记录（输入/输出/耗时）<br>• 用户确认记录<br>• 错误和重试历史<br>• 状态变更时间线<br><br>可查询、可恢复、可审计——否则你很难回答：Agent 为什么调用了这个工具？它是否已经拿到用户确认？',
+    ref: 'Handbook — 智能体（Agent）· State'
+  },
+  s9: {
+    tag: 'stop',
+    tagLabel: '停止条件',
+    title: '⏹️ 停止条件',
+    desc: '停止条件必须明确：<br>• 目标达成 ✅<br>• 超出预算 💰<br>• 信息不足 / 无法决策 ❓<br>• 风险越界 ⚠️<br>• 用户拒绝 / 中断 🚫<br><br>缺了停止条件的 Agent 就像没有 break 的循环——要么超时，要么失控。',
+    ref: 'Handbook — 智能体（Agent）· 第一性原理'
+  }
+};
+
+const panel = document.getElementById('infoPanel');
+
+document.querySelectorAll('.node').forEach(el => {
+  el.addEventListener('click', function() {
+    const id = this.dataset.node;
+    const data = nodeData[id];
+    if (!data) return;
+
+    panel.classList.remove('empty');
+    panel.innerHTML = `
+      <div class="info-title">
+        <span class="info-tag tag-${data.tag}">${data.tagLabel}</span>
+        ${data.title}
+      </div>
+      <div class="info-desc">${data.desc}</div>
+      <div class="info-ref">📖 ${data.ref}</div>
+    `;
+  });
+});
+</script>
+</body>
+</html>
