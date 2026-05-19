@@ -10,6 +10,30 @@
 - WCB 每日打卡入口：<https://web3career.build/zh/programs/AI-Web3-School#tab=learning>
 - Learning Agent 启动 Prompt：<https://aiweb3.school/learning-agent.zh.txt>
 
+## 在新机器上起手（Hermes + Telegram 接力）
+
+如果你在另一台机器从零接手这个 repo（例：从主力机切到次要机做安全隔离）：
+
+```bash
+# 1. clone（用你自己的 SSH / HTTPS 凭据）
+git clone git@github.com:june-in-exile/AI-Web3-Colearning.git
+cd AI-Web3-Colearning
+
+# 2. 安装 Hermes（已装可跳）
+curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash
+
+# 3. 把 Learning Agent 全局人格灌进 Hermes
+cp prompts/SOUL.md ~/.hermes/SOUL.md
+
+# 4. 配 Telegram gateway（向导会问 token + allowed user ID，直接粘到终端 prompt，不要贴给 agent）
+hermes setup gateway
+
+# 5. 前台试跑 + 在 TG 给 bot 发 hello 确认
+hermes gateway run
+```
+
+完成后 Hermes 自动用 `~/.hermes/SOUL.md` 作为人格接 TG bot 上线，你就可以在 Telegram 里继续 [daily/](./daily/) 的任务了。
+
 ## 怎么用这个 repo
 
 1. **看计划** — 翻 [learning-plan.md](./learning-plan.md)，里面有画像 + Week 1–4 + Hackathon 节奏。
