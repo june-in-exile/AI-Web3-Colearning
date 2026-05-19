@@ -1,0 +1,28 @@
+# Claude Code / local agent state (machine-specific, may contain paths or permissions)
+.claude/
+
+# Env files & secrets — repo is PUBLIC, never commit these
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+secrets/
+**/secrets.json
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Node / Python / build artifacts (in case of future experiments)
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+venv/
+dist/
+build/
+.next/
+.turbo/
