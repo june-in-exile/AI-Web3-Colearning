@@ -23,7 +23,7 @@
 | --- | --- | --- |
 | 任务 1 | 搭建 learning agent（任选 Claude Code / Codex / **Hermes Agent**），跑通一次对话式学习任务 | 🟡 Hermes 已装；Day 1 接 TG 后完成 |
 | 任务 2 | 创建个人 GitHub repo（README / commit / agent 配置说明 / 一次协助日志） | 🟢 repo + README + commit 已 ✓；待补 SOUL.md 备份 + 协助日志 |
-| 任务 3 | 用 agent 生成可交互学习产物（小页面 / CLI / 流程图 / quiz / 概念卡片 / 最小 demo） | ⚪ 未做 |
+| 任務 3 | 用 agent 生成可交互學習產物 | 🟢 `experiments/agent-decision-flow/` + `tasks/task-3-interactive-artifact.md` |
 
 ### 模块 B · Web3 基础
 
